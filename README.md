@@ -24,7 +24,7 @@ class Solution:
             if complement in hashmap and hashmap[complement] != i:
                 return [i, hashmap[complement]]
         return []
-
+"""
 Approach
 
 Use a hash map to store numbers and their indices.
@@ -36,3 +36,4 @@ Check if the complement exists in the hash map and is not the same index.
 Time Complexity: O(n)
 
 Space Complexity: O(n)
+"""
