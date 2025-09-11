@@ -1,0 +1,58 @@
+# Minimum Window Substring (LeetCode 76)
+
+## 📌 Problem Statement
+Given two strings `s` and `t` of lengths `m` and `n`,  
+return the **minimum window substring** of `s` such that every character in `t` (including duplicates) is included in the window.  
+If no such substring exists, return an empty string `""`.
+
+🔗 [LeetCode Problem Link](https://leetcode.com/problems/minimum-window-substring/)
+
+
+---
+
+## 🚀 Solution Approach
+We use a **sliding window** with two pointers:
+1. Expand the `end` pointer to include characters.
+2. Keep track of required characters using a frequency map.
+3. Once all characters in `t` are covered (`count == 0`), shrink from the `start` pointer to minimize the window.
+4. Update the result whenever a smaller valid window is found.
+
+### Complexity
+- **Time Complexity:** O(|s| + |t|)  
+- **Space Complexity:** O(1) (constant 128-sized frequency map for ASCII characters)
+
+---
+
+## 📝 Code
+```python
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        if not s or not t or len(s) < len(t):
+            return ""
+
+        min_len = float('inf')
+        count = len(t)
+        start = 0
+        end = 0
+        start_index = 0
+        freq = [0] * 128
+
+        for char in t:
+            freq[ord(char)] += 1
+
+        while end < len(s):
+            if freq[ord(s[end])] > 0:
+                count -= 1
+            freq[ord(s[end])] -= 1
+            end += 1
+
+            while count == 0:
+                if end - start < min_len:
+                    start_index = start
+                    min_len = end - start
+                if freq[ord(s[start])] == 0:
+                    count += 1
+                freq[ord(s[start])] += 1
+                start += 1
+
+        return "" if min_len == float('inf') else s[start_index:start_index + min_len]
