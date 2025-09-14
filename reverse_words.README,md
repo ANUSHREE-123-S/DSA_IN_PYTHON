@@ -1,0 +1,23 @@
+# Reverse Words in a String (LeetCode 151)
+
+## 📌 Problem Statement
+Given an input string `s`, reverse the order of the words.  
+A word is defined as a sequence of non-space characters.  
+The words in `s` will be separated by at least one space.
+
+🔗 [LeetCode Problem Link](https://leetcode.com/problems/reverse-words-in-a-string/)
+
+1. Use `strip()` to remove leading/trailing spaces.  
+2. Use `split()` to separate words (ignores multiple spaces).  
+3. Reverse the list of words.  
+4. Join them back with a single space.  
+## ⏱️ Complexity
+- **Time Complexity:** `O(n)` (traverses string once)  
+- **Space Complexity:** `O(n)` (stores words in a list)  
+## 📝 Code
+```python
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        words = s.strip().split()
+        words.reverse()
+        return " ".join(words)
