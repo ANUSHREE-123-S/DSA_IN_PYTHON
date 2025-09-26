@@ -1,0 +1,40 @@
+# 📈 Daily Temperatures Problem
+
+## Problem Description
+Given a list of daily temperatures `temperatures`, return a list such that, for each day in the input, tells you **how many days you would have to wait until a warmer temperature**.  
+If there is no future day for which this is possible, put `0` instead.
+
+# Approach
+
+We use a **monotonic decreasing stack** to efficiently solve the problem:
+
+1. Create an answer list initialized with `0`s.
+2. Iterate through the `temperatures` list.
+3. For each day:
+   - While the stack is not empty and the current temperature is greater than the temperature at the top index of the stack:
+     - Pop the index from the stack.
+     - Set `ans[index] = current_index - index`.
+   - Push the current index onto the stack.
+4. Return the answer list.
+
+# Complexity Analysis
+
+- **Time Complexity:** `O(n)` — Each index is pushed and popped at most once.
+- **Space Complexity:** `O(n)` — Stack to store indices.
+
+# Code Implementation
+
+```python
+class Solution:
+    def dailyTemperatures(self, temperatures: list[int]) -> list[int]:
+        n = len(temperatures)
+        ans = [0] * n
+        stack = []
+
+        for i, temp in enumerate(temperatures):
+            while stack and temperatures[i] > temperatures[stack[-1]]:
+                prev_index = stack.pop()
+                ans[prev_index] = i - prev_index
+            stack.append(i)
+
+        return ans
