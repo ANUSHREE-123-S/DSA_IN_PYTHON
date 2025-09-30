@@ -1,0 +1,66 @@
+# 🧮 Implement Queue using Stacks
+
+## Problem Description
+Design a **queue** using only two **stacks** (`stack` operations allowed: `push`, `pop`, `top`, and checking if empty`).  
+
+The implemented queue should support the following operations:
+- `push(x)` → Insert element `x` to the back of queue.  
+- `pop()` → Removes the element from the front of queue and returns it.  
+- `peek()` → Get the front element.  
+- `empty()` → Returns whether the queue is empty.
+
+**Explanation:**
+- `MyQueue` → Initializes empty queue  
+- `push(1)` → queue = [1]  
+- `push(2)` → queue = [1,2]  
+- `peek()` → returns 1  
+- `pop()` → removes 1, queue = [2]  
+- `empty()` → returns false  
+
+## Approach
+
+We simulate the **FIFO behavior** of a queue using **two stacks**:
+
+1. **Push Operation (`push(x)`)**  
+   - Always push into the `instack`.
+
+2. **Pop/Peek Operations (`pop()`, `peek()`)**  
+   - If `outstack` is empty, move all elements from `instack` to `outstack`.  
+   - This reverses the order so the **front of the queue** is on top of `outstack`.  
+   - Perform `pop`/`peek` from `outstack`.
+
+3. **Empty Operation (`empty()`)**  
+   - The queue is empty only if both stacks are empty.
+
+## Complexity Analysis
+- **Time Complexity:**  
+  - `push`: `O(1)`  
+  - `pop`, `peek`: Amortized `O(1)` (each element moves at most once between stacks)  
+- **Space Complexity:** `O(n)` for storing elements.
+## Code Implementation
+
+```python
+class MyQueue:
+
+    def __init__(self):
+        self.instack = []
+        self.outstack = []
+
+    def push(self, x: int) -> None:
+        self.instack.append(x)
+        
+    def pop(self) -> int:
+        self.move()
+        return self.outstack.pop()
+    
+    def peek(self) -> int:
+        self.move()
+        return self.outstack[-1]
+
+    def empty(self) -> bool:
+        return not self.instack and not self.outstack
+
+    def move(self):
+        if not self.outstack:
+            while self.instack:
+                self.outstack.append(self.instack.pop())
