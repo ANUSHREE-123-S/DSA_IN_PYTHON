@@ -1,0 +1,46 @@
+# 🌳 Lowest Common Ancestor of a Binary Search Tree (BST)
+
+## 🧩 Problem Description
+Given a **Binary Search Tree (BST)**, find the **Lowest Common Ancestor (LCA)** of two given nodes `p` and `q`.
+
+According to the definition of LCA on Wikipedia:  
+> “The lowest common ancestor is defined between two nodes `p` and `q` as the lowest node in the tree that has both `p` and `q` as descendants (where we allow a node to be a descendant of itself).”
+
+**Explanation:**  
+Since node 2 is an ancestor of node 4, the LCA of 2 and 4 is 2.
+
+---
+
+## 💡 Approach — BST Property Traversal
+
+In a **Binary Search Tree**, the left child is smaller and the right child is larger than the parent node.
+
+We can use this property to efficiently find the **Lowest Common Ancestor** by moving down the tree:
+1. If both `p` and `q` are smaller than `root`, the LCA lies in the **left subtree**.
+2. If both `p` and `q` are greater than `root`, the LCA lies in the **right subtree**.
+3. Otherwise, `root` is the LCA (when `p` and `q` are on different sides or equal to `root`).
+
+---
+
+## ✅ Code Implementation
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        while root:
+            # If both nodes are smaller, move left
+            if p.val < root.val and q.val < root.val:
+                root = root.left
+            # If both nodes are larger, move right
+            elif p.val > root.val and q.val > root.val:
+                root = root.right
+            # Split point found — this is the LCA
+            else:
+                return root
