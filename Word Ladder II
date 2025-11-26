@@ -1,0 +1,111 @@
+
+# Word Ladder II - Find All Shortest Transformation Sequences
+
+# Problem Statement
+
+Given two words, `beginWord` and `endWord`, and a dictionary `wordList`, find all shortest transformation sequences from `beginWord` to `endWord`, such that:
+
+1. Only one letter can be changed at a time.
+2. Each transformed word must exist in the word list.
+
+*Example:*
+
+```
+Input:
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log","cog"]
+
+Output:
+[
+  ["hit","hot","dot","dog","cog"],
+  ["hit","hot","lot","log","cog"]
+]
+```
+# Approach
+
+The solution uses **two main steps**:
+
+# 1. BFS (Breadth-First Search)
+
+* Build a graph where each word is connected to words that differ by exactly one letter.
+* Compute the **shortest distance** of each word from `beginWord`.
+* Stop BFS early if the `endWord` is reached to optimize runtime.
+
+# 2. DFS (Depth-First Search / Backtracking)
+
+* Start from `beginWord` and traverse the graph using only the shortest paths determined by BFS.
+* Collect all sequences that reach `endWord`.
+
+*Optimization:*
+
+* Only explore neighbors that are exactly 1 step further in distance from the current word.
+
+# Code
+
+```python
+from collections import defaultdict, deque
+
+class Solution:
+    def findLadders(self, beginWord, endWord, wordList):
+        wordSet = set(wordList)
+        if endWord not in wordSet:
+            return []
+
+        distance = {beginWord: 0}
+        graph = defaultdict(list)
+        queue = deque([beginWord])
+        L = len(beginWord)
+
+        while queue:
+            word = queue.popleft()
+            for i in range(L):
+                for c in 'abcdefghijklmnopqrstuvwxyz':
+                    new_word = word[:i] + c + word[i+1:]
+                    if new_word in wordSet:
+                        graph[word].append(new_word)
+                        if new_word not in distance:
+                            distance[new_word] = distance[word] + 1
+                            queue.append(new_word)
+            if endWord in distance and distance[word] >= distance[endWord]:
+                break
+
+        res = []
+        path = [beginWord]
+
+        def dfs(word):
+            if word == endWord:
+                res.append(path[:])
+                return
+            for nei in graph[word]:
+                if distance.get(nei, float('inf')) == distance[word] + 1:
+                    path.append(nei)
+                    dfs(nei)
+                    path.pop()
+
+        if endWord in distance:
+            dfs(beginWord)
+        return res
+
+# Example usage:
+sol = Solution()
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log","cog"]
+print(sol.findLadders(beginWord, endWord, wordList))
+```
+# Time Complexity
+
+* **BFS:** O(N * L * 26) where N = number of words, L = length of each word.
+* **DFS:** Can explore all paths but constrained to shortest paths only.
+
+# Space Complexity
+
+* O(N * L) for the graph and BFS queue.
+* O(N) for distance dictionary.
+
+# References
+
+* [LeetCode 126. Word Ladder II](https://leetcode.com/problems/word-ladder-ii/)
+* Graph algorithms: BFS and DFS
+* Python `collections` module (deque, defaultdict)
